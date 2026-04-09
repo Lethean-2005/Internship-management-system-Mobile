@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, FlatList, RefreshControl, TouchableOpacity, Modal, Pressable, TextInput, Alert } from 'react-native';
+import { View, Text, StyleSheet, FlatList, RefreshControl, TouchableOpacity, Modal, Pressable, TextInput, Alert, ScrollView, KeyboardAvoidingView, Platform, Linking } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { Card, Badge, LoadingSpinner, EmptyState, Button, Input } from '../../components/ui';
 import { getInterviews, createInterview, updateInterview, deleteInterview, updateResult } from '../../api/interviews';
@@ -118,9 +118,9 @@ export function InterviewsScreen() {
 
   if (loading) return <LoadingSpinner />;
 
-  const filteredInterns = interns.filter((i) =>
+  const filteredInterns = internSearch.trim() ? interns.filter((i) =>
     i.name.toLowerCase().includes(internSearch.toLowerCase())
-  );
+  ) : [];
 
   return (
     <View style={styles.container}>
@@ -142,10 +142,16 @@ export function InterviewsScreen() {
               <Text style={styles.date}> {item.interview_date}</Text>
             </View>
             {item.location && (
-              <View style={styles.infoRow}>
-                <IconMapPin size={14} color={colors.textSecondary} strokeWidth={1.5} />
-                <Text style={styles.date}> {item.location}</Text>
-              </View>
+              <TouchableOpacity
+                style={styles.infoRow}
+                activeOpacity={item.location.startsWith('http') ? 0.5 : 1}
+                onPress={() => { if (item.location?.startsWith('http')) Linking.openURL(item.location); }}
+              >
+                <IconMapPin size={14} color={item.location.startsWith('http') ? '#007aff' : colors.textSecondary} strokeWidth={1.5} />
+                <Text style={[styles.date, item.location.startsWith('http') && styles.link]} numberOfLines={1}>
+                  {item.location.startsWith('http') ? ' Open Map' : ` ${item.location}`}
+                </Text>
+              </TouchableOpacity>
             )}
             <View style={styles.metaRow}>
               <Text style={styles.type}>{item.type}</Text>
@@ -182,10 +188,17 @@ export function InterviewsScreen() {
       </TouchableOpacity>
 
       {/* Create/Edit Form Modal */}
-      <Modal visible={showForm} transparent animationType="fade">
-        <Pressable style={styles.overlay} onPress={resetForm}>
-          <Pressable style={styles.formDialog} onPress={(e) => e.stopPropagation()}>
-            <Text style={styles.formTitle}>{editId ? t('interviews.editInterview') : t('interviews.scheduleInterview')}</Text>
+      <Modal visible={showForm} animationType="slide">
+        <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+          <View style={styles.formHeader}>
+            <TouchableOpacity onPress={resetForm}>
+              <Text style={styles.formCancel}>{t('common.cancel')}</Text>
+            </TouchableOpacity>
+            <Text style={styles.formHeaderTitle}>{editId ? t('interviews.editInterview') : t('interviews.scheduleInterview')}</Text>
+            <View style={{ width: 60 }} />
+          </View>
+          <ScrollView style={styles.formBody} keyboardShouldPersistTaps="always">
+            <View style={styles.formContent}>
 
             {isAdmin && !editId && (
               <>
@@ -197,17 +210,30 @@ export function InterviewsScreen() {
                   onChangeText={setInternSearch}
                   placeholderTextColor={colors.gray[400]}
                 />
-                <View style={styles.internList}>
-                  {filteredInterns.slice(0, 5).map((i) => (
-                    <TouchableOpacity
-                      key={i.id}
-                      style={[styles.internRow, selectedIntern === i.id && styles.internRowActive]}
-                      onPress={() => setSelectedIntern(i.id)}
-                    >
-                      <Text style={[styles.internName, selectedIntern === i.id && styles.internNameActive]}>{i.name}</Text>
+                {selectedIntern && (
+                  <View style={styles.selectedIntern}>
+                    <Text style={styles.selectedInternText}>
+                      {interns.find((i) => i.id === selectedIntern)?.name}
+                    </Text>
+                    <TouchableOpacity onPress={() => { setSelectedIntern(null); setInternSearch(''); }}>
+                      <Text style={styles.selectedInternClear}>✕</Text>
                     </TouchableOpacity>
-                  ))}
-                </View>
+                  </View>
+                )}
+                {filteredInterns.length > 0 && !selectedIntern && (
+                  <View style={styles.internDropdown}>
+                    {filteredInterns.slice(0, 3).map((i) => (
+                      <TouchableOpacity
+                        key={i.id}
+                        style={styles.internRow}
+                        onPress={() => { setSelectedIntern(i.id); setInternSearch(i.name); }}
+                      >
+                        <Text style={styles.internName}>{i.name}</Text>
+                        <Text style={styles.internEmail}>{i.email}</Text>
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                )}
               </>
             )}
 
@@ -232,13 +258,13 @@ export function InterviewsScreen() {
 
             <Input label={t('interviews.notes')} value={notes} onChangeText={setNotes} multiline numberOfLines={2} style={{ height: 60, textAlignVertical: 'top' }} />
 
-            <View style={styles.formButtons}>
-              <Button title={t('common.cancel')} onPress={resetForm} variant="secondary" />
-              <View style={{ width: spacing.sm }} />
-              <Button title={editId ? t('common.update') : t('common.create')} onPress={handleSubmit} loading={saving} />
+              <View style={{ marginTop: spacing.lg }}>
+                <Button title={editId ? t('common.update') : t('common.create')} onPress={handleSubmit} loading={saving} />
+              </View>
+              <View style={{ height: 40 }} />
             </View>
-          </Pressable>
-        </Pressable>
+          </ScrollView>
+        </KeyboardAvoidingView>
       </Modal>
 
       {/* Result Modal */}
@@ -284,7 +310,8 @@ const styles = StyleSheet.create({
   company: { fontSize: fontSize.md, fontWeight: '600', color: colors.text },
   intern: { fontSize: fontSize.sm, color: colors.accent, marginTop: 2 },
   infoRow: { flexDirection: 'row', alignItems: 'center', marginTop: spacing.xs },
-  date: { fontSize: fontSize.sm, color: colors.textSecondary },
+  date: { fontSize: fontSize.sm, color: colors.textSecondary, flex: 1 },
+  link: { color: '#007aff', fontWeight: '500' },
   metaRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm, marginTop: spacing.xs },
   type: { fontSize: fontSize.xs, color: colors.accent, fontWeight: '500', textTransform: 'capitalize' },
   feedback: { fontSize: fontSize.xs, color: colors.gray[500], marginTop: spacing.xs, fontStyle: 'italic' },
@@ -307,6 +334,16 @@ const styles = StyleSheet.create({
 
   // Modal
   overlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.4)', justifyContent: 'center', alignItems: 'center' },
+  formHeader: {
+    flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
+    paddingHorizontal: spacing.lg, paddingVertical: spacing.md,
+    borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: colors.gray[200],
+    backgroundColor: colors.white,
+  },
+  formHeaderTitle: { fontSize: fontSize.md, fontWeight: '600', color: colors.text },
+  formCancel: { fontSize: fontSize.md, color: '#007aff' },
+  formBody: { flex: 1, backgroundColor: colors.background },
+  formContent: { padding: spacing.xl },
   formDialog: { backgroundColor: colors.white, borderRadius: 5, width: '90%', maxHeight: '85%', padding: spacing.xl },
   formTitle: { fontSize: fontSize.lg, fontWeight: '600', color: colors.text, marginBottom: spacing.sm },
   formSub: { fontSize: fontSize.sm, color: colors.textSecondary, marginBottom: spacing.md },
@@ -318,12 +355,23 @@ const styles = StyleSheet.create({
   },
   formButtons: { flexDirection: 'row', marginTop: spacing.lg },
 
-  // Intern list
-  internList: { marginBottom: spacing.sm },
-  internRow: { paddingVertical: spacing.sm, paddingHorizontal: spacing.md, borderRadius: 5, marginBottom: 2 },
-  internRowActive: { backgroundColor: colors.gray[100] },
-  internName: { fontSize: fontSize.sm, color: colors.text },
-  internNameActive: { fontWeight: '600' },
+  // Intern dropdown
+  selectedIntern: {
+    flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
+    backgroundColor: '#e0f2fe', borderRadius: 5, padding: spacing.md, marginBottom: spacing.md,
+  },
+  selectedInternText: { fontSize: fontSize.sm, fontWeight: '600', color: colors.text },
+  selectedInternClear: { fontSize: fontSize.md, color: colors.gray[500], paddingHorizontal: spacing.sm },
+  internDropdown: {
+    backgroundColor: colors.white, borderRadius: 5, borderWidth: 1, borderColor: colors.gray[200],
+    marginBottom: spacing.md, overflow: 'hidden',
+  },
+  internRow: {
+    paddingVertical: spacing.md, paddingHorizontal: spacing.lg,
+    borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: colors.gray[200],
+  },
+  internName: { fontSize: fontSize.sm, fontWeight: '500', color: colors.text },
+  internEmail: { fontSize: fontSize.xs, color: colors.textSecondary, marginTop: 2 },
 
   // Type chips
   typeRow: { flexDirection: 'row', gap: spacing.sm, marginBottom: spacing.md },

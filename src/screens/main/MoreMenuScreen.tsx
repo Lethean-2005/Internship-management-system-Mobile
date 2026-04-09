@@ -61,7 +61,7 @@ export function MoreMenuScreen() {
               onPress={() => navigation.navigate(item.screen as any)}
             >
               <View style={styles.iconBox}>
-                <item.Icon size={22} color={colors.gray[700]} strokeWidth={1.5} />
+                <item.Icon size={22} color="#f97316" strokeWidth={1.5} />
               </View>
               <Text style={styles.cardLabel} numberOfLines={2}>{t(item.title)}</Text>
             </TouchableOpacity>
@@ -88,12 +88,6 @@ const styles = StyleSheet.create({
     minHeight: 120,
   },
   iconBox: {
-    width: 44,
-    height: 44,
-    borderRadius: 5,
-    backgroundColor: colors.gray[100],
-    justifyContent: 'center',
-    alignItems: 'center',
     marginBottom: spacing.md,
   },
   cardLabel: { fontSize: fontSize.sm, fontWeight: '500', color: colors.text },

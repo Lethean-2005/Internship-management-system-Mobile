@@ -18,8 +18,10 @@
         "NSAppTransportSecurity": {
           "NSAllowsArbitraryLoads": true,
           "NSAllowsLocalNetworking": true
-        }
-      }
+        },
+        "ITSAppUsesNonExemptEncryption": false
+      },
+      "bundleIdentifier": "com.letheanseourn.internshipmanagementsystem"
     },
     "android": {
       "adaptiveIcon": {
@@ -27,7 +29,8 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.letheanseourn.internshipmanagementsystem"
     },
     "web": {
       "favicon": "./assets/favicon.png"
