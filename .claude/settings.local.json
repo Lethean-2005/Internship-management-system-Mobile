@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(xargs grep:*)",
+      "Bash(grep -A 5 -B 5 \"invalid\\\\|credential\\\\|auth\\\\|error\\\\|fail\" /d/Lethean/Development/IMS-Mobile/src/i18n/*.json)",
+      "Bash(ipconfig)",
+      "Bash(npx tsc:*)",
+      "Bash(cp \"D:/Lethean/Development/IMS/frontend/src/i18n/km.json\" \"D:/Lethean/Development/IMS-Mobile/src/i18n/km.json\")",
+      "Bash(cp \"D:/Lethean/Development/IMS/frontend/src/i18n/fr.json\" \"D:/Lethean/Development/IMS-Mobile/src/i18n/fr.json\")",
+      "Bash(cp \"D:/Lethean/Development/IMS/frontend/src/i18n/mg.json\" \"D:/Lethean/Development/IMS-Mobile/src/i18n/mg.json\")",
+      "Bash(cp \"D:/Lethean/Development/IMS/frontend/src/i18n/vi.json\" \"D:/Lethean/Development/IMS-Mobile/src/i18n/vi.json\")",
+      "Bash(node -e \"const l = require\\('lucide-react-native'\\); console.log\\(Object.keys\\(l\\).filter\\(k => k[0] === k[0].toUpperCase\\(\\) && k !== 'default' && k !== 'createLucideIcon'\\).slice\\(0, 30\\).join\\(', '\\)\\)\")",
+      "Bash(npm ls:*)",
+      "Bash(ls node_modules/@tabler)",
+      "Bash(npm install:*)",
+      "Bash(head -5 node_modules/@tabler/icons-react-native/dist/esm/index.mjs)",
+      "Bash(head -5 node_modules/@tabler/icons-react-native/dist/cjs/index.js)",
+      "Bash(curl -s \"http://localhost:8081/index.ts.bundle?platform=web&dev=true&hot=false&lazy=true\")",
+      "Bash(npx expo:*)",
+      "Bash(npm search:*)",
+      "Bash(npm view:*)"
+    ]
+  }
+}

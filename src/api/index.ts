@@ -1,0 +1,15 @@
+export * as authApi from './auth';
+export * as dashboardApi from './dashboard';
+export * as worklogsApi from './worklogs';
+export * as reportsApi from './reports';
+export * as slidesApi from './slides';
+export * as interviewsApi from './interviews';
+export * as jobPostingsApi from './jobPostings';
+export * as internLeavesApi from './internLeaves';
+export * as mentoringSessionsApi from './mentoringSessions';
+export * as contactsApi from './contacts';
+export * as companiesApi from './companies';
+export * as internshipsApi from './internships';
+export * as usersApi from './users';
+export * as rolesApi from './roles';
+export * as settingsApi from './settings';
