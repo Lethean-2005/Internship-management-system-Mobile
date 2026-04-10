@@ -3,14 +3,14 @@ import { View, Text, StyleSheet, ScrollView, Alert, TouchableOpacity } from 'rea
 import { useTranslation } from 'react-i18next';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import type { RouteProp } from '@react-navigation/native';
-import { Button, Input, LoadingSpinner } from '../../components/ui';
+import { Button, Input, LoadingSpinner, GradientBackground } from '../../components/ui';
 import { getUser, createUser, updateUser } from '../../api/users';
 import { getRoles } from '../../api/roles';
 import { colors, fontSize, spacing, borderRadius } from '../../lib/theme';
 import type { Role } from '../../types/ims';
-import type { MoreStackParamList } from '../../navigation/types';
+import type { ProfileStackParamList } from '../../navigation/types';
 
-type FormRoute = RouteProp<MoreStackParamList, 'UserForm'>;
+type FormRoute = RouteProp<ProfileStackParamList, 'UserForm'>;
 
 export function UserFormScreen() {
   const { t } = useTranslation();
@@ -76,7 +76,8 @@ export function UserFormScreen() {
   if (loading) return <LoadingSpinner />;
 
   return (
-    <ScrollView style={styles.container} keyboardShouldPersistTaps="always">
+    <GradientBackground>
+      <ScrollView style={styles.container} keyboardShouldPersistTaps="always">
       <Text style={styles.section}>Account</Text>
       <Input label="Name *" value={name} onChangeText={setName} />
       <Input label="Email *" value={email} onChangeText={setEmail} keyboardType="email-address" autoCapitalize="none" />
@@ -101,12 +102,13 @@ export function UserFormScreen() {
 
       <Button title={isEdit ? 'Update User' : 'Create User'} onPress={handleSubmit} loading={saving} />
       <View style={{ height: 40 }} />
-    </ScrollView>
+      </ScrollView>
+    </GradientBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.white, padding: spacing.xxl },
+  container: { flex: 1, backgroundColor: 'transparent', padding: spacing.xxl },
   section: { fontSize: fontSize.lg, fontWeight: '700', color: colors.text, marginTop: spacing.lg, marginBottom: spacing.sm },
   roleList: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm, marginBottom: spacing.md },
   roleChip: {

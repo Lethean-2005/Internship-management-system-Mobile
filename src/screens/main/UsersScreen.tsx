@@ -4,13 +4,13 @@ import { useTranslation } from 'react-i18next';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { IconSearch, IconPlus, IconPencil, IconToggleLeft, IconToggleRight, IconTrash } from '@tabler/icons-react-native';
-import { Card, Badge, LoadingSpinner, EmptyState, Button } from '../../components/ui';
+import { Card, Badge, LoadingSpinner, EmptyState, Button, GradientBackground } from '../../components/ui';
 import { getUsers, deleteUser, toggleActive } from '../../api/users';
 import { colors, fontSize, spacing, borderRadius } from '../../lib/theme';
 import type { User, PaginatedResponse } from '../../types/ims';
-import type { MoreStackParamList } from '../../navigation/types';
+import type { ProfileStackParamList } from '../../navigation/types';
 
-type Nav = NativeStackNavigationProp<MoreStackParamList>;
+type Nav = NativeStackNavigationProp<ProfileStackParamList>;
 
 export function UsersScreen() {
   const { t } = useTranslation();
@@ -58,7 +58,8 @@ export function UsersScreen() {
   if (loading) return <LoadingSpinner />;
 
   return (
-    <View style={styles.container}>
+    <GradientBackground>
+      <View style={styles.container}>
       <View style={styles.searchRow}>
         <TextInput
           style={styles.searchInput}
@@ -125,12 +126,13 @@ export function UsersScreen() {
       <TouchableOpacity style={styles.fab} onPress={() => navigation.navigate('UserForm', {})}>
         <IconPlus size={28} color={colors.white} strokeWidth={2} />
       </TouchableOpacity>
-    </View>
+      </View>
+    </GradientBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background },
+  container: { flex: 1, backgroundColor: 'transparent' },
   searchRow: { flexDirection: 'row', padding: spacing.lg, paddingBottom: 0 },
   searchInput: {
     flex: 1, backgroundColor: colors.white, borderRadius: borderRadius.md,

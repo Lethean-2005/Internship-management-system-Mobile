@@ -1,15 +1,24 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Modal, Pressable, Image, Platform } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import React, { useState, useMemo } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Modal, Pressable, Image } from 'react-native';
 import { useTranslation } from 'react-i18next';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useAuthStore } from '../../stores/authStore';
 import { logout } from '../../api/auth';
-import { colors, fontSize, spacing } from '../../lib/theme';
+import { fontSize, spacing } from '../../lib/theme';
+import { useAppTheme } from '../../lib/useAppTheme';
 import {
-  IconChevronRight, IconLogout, IconShieldCheck, IconMail, IconPhone,
+  IconChevronRight, IconLogout, IconShieldCheck, IconPhone,
   IconSchool, IconBuilding, IconBriefcase, IconUser, IconUsers, IconLanguage, IconCheck,
+  IconSettings, IconUsersGroup, IconShield, IconPalette,
+  IconSun, IconMoon, IconDeviceMobile,
 } from '@tabler/icons-react-native';
+import { GradientSafeArea } from '../../components/ui';
+import { useThemeStore, type ThemeMode } from '../../stores/themeStore';
+import type { ProfileStackParamList } from '../../navigation/types';
+
+type Nav = NativeStackNavigationProp<ProfileStackParamList>;
 
 const FLAG_BASE = 'https://flagcdn.com/w40';
 const LANGUAGES = [
@@ -20,49 +29,28 @@ const LANGUAGES = [
   { code: 'vi', label: 'Tiếng Việt (Vietnamese)', flagUrl: `${FLAG_BASE}/vn.png` },
 ];
 
-interface RowProps {
-  Icon: any;
-  iconBg: string;
-  label: string;
-  value?: string | null;
-  onPress?: () => void;
-  isLast?: boolean;
-}
-
-function Row({ Icon, iconBg, label, value, onPress, isLast }: RowProps) {
-  return (
-    <TouchableOpacity
-      style={styles.row}
-      activeOpacity={onPress ? 0.5 : 1}
-      onPress={onPress}
-      disabled={!onPress}
-    >
-      <View style={[styles.rowIcon, { backgroundColor: iconBg }]}>
-        <Icon size={16} color={colors.white} strokeWidth={2} />
-      </View>
-      <View style={[styles.rowContent, !isLast && styles.rowBorder]}>
-        <Text style={styles.rowLabel}>{label}</Text>
-        <View style={styles.rowRight}>
-          {value ? <Text style={styles.rowValue}>{value}</Text> : null}
-          <IconChevronRight size={16} color={colors.gray[300]} strokeWidth={2} />
-        </View>
-      </View>
-    </TouchableOpacity>
-  );
-}
-
-function Group({ children }: { children: React.ReactNode }) {
-  return <View style={styles.groupCard}>{children}</View>;
-}
-
 export function ProfileScreen() {
   const { t, i18n } = useTranslation();
+  const navigation = useNavigation<Nav>();
   const user = useAuthStore((s) => s.user);
   const clearAuth = useAuthStore((s) => s.clearAuth);
+  const isAdmin = user?.role?.slug === 'admin';
+  const { colors } = useAppTheme();
+  const styles = useMemo(() => createStyles(colors), [colors]);
+
+  const themeMode = useThemeStore((s) => s.mode);
+  const setThemeMode = useThemeStore((s) => s.setMode);
 
   const [showLogout, setShowLogout] = useState(false);
   const [showLang, setShowLang] = useState(false);
+  const [showTheme, setShowTheme] = useState(false);
 
+  const THEME_OPTIONS: { mode: ThemeMode; labelKey: string; Icon: any }[] = [
+    { mode: 'light', labelKey: 'profile.themeLight', Icon: IconSun },
+    { mode: 'dark', labelKey: 'profile.themeDark', Icon: IconMoon },
+    { mode: 'system', labelKey: 'profile.themeSystem', Icon: IconDeviceMobile },
+  ];
+  const currentTheme = THEME_OPTIONS.find((o) => o.mode === themeMode) || THEME_OPTIONS[2];
   const currentLang = LANGUAGES.find((l) => l.code === i18n.language) || LANGUAGES[0];
 
   const handleLogout = () => setShowLogout(true);
@@ -79,13 +67,56 @@ export function ProfileScreen() {
     setShowLang(false);
   };
 
+  // Row helper — closed over the current theme's styles + colors
+  const Row = ({
+    Icon,
+    iconBg,
+    label,
+    value,
+    onPress,
+    isLast,
+  }: {
+    Icon: any;
+    iconBg: string;
+    label: string;
+    value?: string | null;
+    onPress?: () => void;
+    isLast?: boolean;
+  }) => (
+    <TouchableOpacity
+      style={styles.row}
+      activeOpacity={onPress ? 0.5 : 1}
+      onPress={onPress}
+      disabled={!onPress}
+    >
+      <View style={[styles.rowIcon, { backgroundColor: iconBg }]}>
+        <Icon size={16} color="#FFFFFF" strokeWidth={2} />
+      </View>
+      <View style={[styles.rowContent, !isLast && styles.rowBorder]}>
+        <Text style={styles.rowLabel}>{label}</Text>
+        <View style={styles.rowRight}>
+          {value ? <Text style={styles.rowValue}>{value}</Text> : null}
+          <IconChevronRight size={16} color={colors.cardTextMuted} strokeWidth={2} />
+        </View>
+      </View>
+    </TouchableOpacity>
+  );
+
+  const Group = ({ children }: { children: React.ReactNode }) => (
+    <View style={styles.groupCard}>{children}</View>
+  );
+
   return (
-    <SafeAreaView style={styles.safe}>
+    <GradientSafeArea>
       <ScrollView style={styles.container} contentContainerStyle={styles.content}>
         <Text style={styles.pageTitle}>{t('profile.accountSettings')}</Text>
 
         <Group>
-          <TouchableOpacity style={styles.profileRow} activeOpacity={0.5}>
+          <TouchableOpacity
+            style={styles.profileRow}
+            activeOpacity={0.5}
+            onPress={() => navigation.navigate('EditProfile')}
+          >
             {user?.avatar ? (
               <Image source={{ uri: user.avatar }} style={styles.avatarImage} />
             ) : (
@@ -97,7 +128,7 @@ export function ProfileScreen() {
               <Text style={styles.profileName}>{user?.name}</Text>
               <Text style={styles.profileSub}>{user?.email}</Text>
             </View>
-            <IconChevronRight size={18} color={colors.gray[300]} strokeWidth={2} />
+            <IconChevronRight size={18} color={colors.cardTextMuted} strokeWidth={2} />
           </TouchableOpacity>
         </Group>
 
@@ -117,28 +148,67 @@ export function ProfileScreen() {
         <Group>
           <TouchableOpacity style={styles.row} activeOpacity={0.5} onPress={() => setShowLang(true)}>
             <View style={[styles.rowIcon, { backgroundColor: '#007aff' }]}>
-              <IconLanguage size={16} color={colors.white} strokeWidth={2} />
+              <IconLanguage size={16} color="#FFFFFF" strokeWidth={2} />
             </View>
-            <View style={styles.rowContent}>
+            <View style={[styles.rowContent, styles.rowBorder]}>
               <Text style={styles.rowLabel}>{t('profile.language')}</Text>
               <View style={styles.rowRight}>
                 <Image source={{ uri: currentLang.flagUrl }} style={styles.langFlagImg} />
                 <Text style={styles.rowValue}>{currentLang.label}</Text>
-                <IconChevronRight size={16} color={colors.gray[300]} strokeWidth={2} />
+                <IconChevronRight size={16} color={colors.cardTextMuted} strokeWidth={2} />
               </View>
             </View>
           </TouchableOpacity>
+          <TouchableOpacity style={styles.row} activeOpacity={0.5} onPress={() => setShowTheme(true)}>
+            <View style={[styles.rowIcon, { backgroundColor: '#ff9500' }]}>
+              <IconPalette size={16} color="#FFFFFF" strokeWidth={2} />
+            </View>
+            <View style={[styles.rowContent, isAdmin && styles.rowBorder]}>
+              <Text style={styles.rowLabel}>{t('profile.theme')}</Text>
+              <View style={styles.rowRight}>
+                <Text style={styles.rowValue}>{t(currentTheme.labelKey)}</Text>
+                <IconChevronRight size={16} color={colors.cardTextMuted} strokeWidth={2} />
+              </View>
+            </View>
+          </TouchableOpacity>
+          {isAdmin && (
+            <Row
+              Icon={IconSettings}
+              iconBg="#8E8E93"
+              label={t('config.title')}
+              onPress={() => navigation.navigate('Configuration')}
+              isLast
+            />
+          )}
         </Group>
+
+        {isAdmin && (
+          <Group>
+            <Row
+              Icon={IconUsersGroup}
+              iconBg="#5856d6"
+              label={t('sidebar.users')}
+              onPress={() => navigation.navigate('Users')}
+            />
+            <Row
+              Icon={IconShield}
+              iconBg="#34c759"
+              label={t('sidebar.roles')}
+              onPress={() => navigation.navigate('Roles')}
+              isLast
+            />
+          </Group>
+        )}
 
         <Group>
           <TouchableOpacity style={styles.row} activeOpacity={0.5} onPress={handleLogout}>
             <View style={[styles.rowIcon, { backgroundColor: '#ff3b30' }]}>
-              <IconLogout size={16} color={colors.white} strokeWidth={2} />
+              <IconLogout size={16} color="#FFFFFF" strokeWidth={2} />
             </View>
             <View style={styles.rowContent}>
               <Text style={[styles.rowLabel, { color: '#ff3b30' }]}>{t('sidebar.signOut')}</Text>
               <View style={styles.rowRight}>
-                <IconChevronRight size={16} color={colors.gray[300]} strokeWidth={2} />
+                <IconChevronRight size={16} color={colors.cardTextMuted} strokeWidth={2} />
               </View>
             </View>
           </TouchableOpacity>
@@ -161,6 +231,41 @@ export function ProfileScreen() {
                 <Text style={[styles.dialogBtnText, styles.dialogBtnDangerText]}>{t('sidebar.signOut')}</Text>
               </TouchableOpacity>
             </View>
+          </View>
+        </Pressable>
+      </Modal>
+
+      {/* Theme Modal */}
+      <Modal visible={showTheme} transparent animationType="fade">
+        <Pressable style={styles.overlay} onPress={() => setShowTheme(false)}>
+          <View style={styles.langDialog}>
+            <Text style={styles.langDialogTitle}>{t('profile.theme')}</Text>
+            <Text style={styles.langDialogSub}>{t('profile.selectTheme')}</Text>
+            {THEME_OPTIONS.map((opt, index) => {
+              const active = themeMode === opt.mode;
+              return (
+                <TouchableOpacity
+                  key={opt.mode}
+                  style={[styles.langRow, index < THEME_OPTIONS.length - 1 && styles.langRowBorder]}
+                  onPress={() => {
+                    setThemeMode(opt.mode);
+                    setShowTheme(false);
+                  }}
+                >
+                  <View style={styles.themeIconWrap}>
+                    <opt.Icon
+                      size={20}
+                      color={active ? '#007aff' : colors.cardTextMuted}
+                      strokeWidth={2}
+                    />
+                  </View>
+                  <Text style={[styles.langLabel, active && styles.langLabelActive]}>
+                    {t(opt.labelKey)}
+                  </Text>
+                  {active && <IconCheck size={18} color="#007aff" strokeWidth={2.5} />}
+                </TouchableOpacity>
+              );
+            })}
           </View>
         </Pressable>
       </Modal>
@@ -189,53 +294,148 @@ export function ProfileScreen() {
           </View>
         </Pressable>
       </Modal>
-    </SafeAreaView>
+    </GradientSafeArea>
   );
 }
 
-const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: '#f2f2f7' },
-  container: { flex: 1 },
-  content: { paddingHorizontal: spacing.lg },
-  pageTitle: {
-    fontSize: fontSize.xxxl, fontWeight: '700', color: colors.text,
-    marginTop: spacing.sm, marginBottom: spacing.lg, paddingHorizontal: spacing.xs,
-  },
-  groupCard: { backgroundColor: colors.white, borderRadius: 5, marginBottom: spacing.xxl, overflow: 'hidden' },
-  profileRow: { flexDirection: 'row', alignItems: 'center', padding: spacing.lg },
-  avatar: { width: 60, height: 60, borderRadius: 30, backgroundColor: colors.gray[400], justifyContent: 'center', alignItems: 'center' },
-  avatarImage: { width: 60, height: 60, borderRadius: 30 },
-  avatarText: { fontSize: fontSize.xxl, fontWeight: '600', color: colors.white },
-  profileInfo: { flex: 1, marginLeft: spacing.lg },
-  profileName: { fontSize: fontSize.lg, fontWeight: '600', color: colors.text },
-  profileSub: { fontSize: fontSize.sm, color: colors.textSecondary, marginTop: 2 },
-  row: { flexDirection: 'row', alignItems: 'center', paddingLeft: spacing.lg, backgroundColor: colors.white },
-  rowIcon: { width: 29, height: 29, borderRadius: 5, justifyContent: 'center', alignItems: 'center' },
-  rowContent: { flex: 1, flexDirection: 'row', alignItems: 'center', paddingVertical: 12, paddingRight: spacing.lg, marginLeft: spacing.md },
-  rowBorder: { borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: colors.gray[200] },
-  rowLabel: { flex: 1, fontSize: fontSize.md, color: colors.text },
-  rowRight: { flexDirection: 'row', alignItems: 'center', gap: 4 },
-  rowValue: { fontSize: fontSize.md, color: colors.textSecondary },
+// Styles are created inside the component via useMemo(() => createStyles(colors))
+// so they re-calculate whenever the active theme's color palette changes.
+function createStyles(colors: ReturnType<typeof useAppTheme>['colors']) {
+  return StyleSheet.create({
+    safe: { flex: 1, backgroundColor: 'transparent' },
+    container: { flex: 1 },
+    content: { paddingHorizontal: spacing.lg },
+    pageTitle: {
+      fontSize: fontSize.xxxl,
+      fontWeight: '700',
+      color: colors.textOnBackground,
+      marginTop: spacing.sm,
+      marginBottom: spacing.lg,
+      paddingHorizontal: spacing.xs,
+    },
+    groupCard: {
+      backgroundColor: colors.card,
+      borderRadius: 5,
+      marginBottom: spacing.xxl,
+      overflow: 'hidden',
+    },
+    profileRow: { flexDirection: 'row', alignItems: 'center', padding: spacing.lg },
+    avatar: {
+      width: 60,
+      height: 60,
+      borderRadius: 30,
+      backgroundColor: 'rgba(255,255,255,0.25)',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    avatarImage: { width: 60, height: 60, borderRadius: 30 },
+    avatarText: { fontSize: fontSize.xxl, fontWeight: '600', color: colors.cardText },
+    profileInfo: { flex: 1, marginLeft: spacing.lg },
+    profileName: { fontSize: fontSize.lg, fontWeight: '600', color: colors.cardText },
+    profileSub: { fontSize: fontSize.sm, color: colors.cardTextMuted, marginTop: 2 },
+    row: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingLeft: spacing.lg,
+      backgroundColor: colors.card,
+    },
+    rowIcon: {
+      width: 29,
+      height: 29,
+      borderRadius: 5,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    rowContent: {
+      flex: 1,
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingVertical: 12,
+      paddingRight: spacing.lg,
+      marginLeft: spacing.md,
+    },
+    rowBorder: {
+      borderBottomWidth: StyleSheet.hairlineWidth,
+      borderBottomColor: colors.cardBorder,
+    },
+    rowLabel: { flex: 1, fontSize: fontSize.md, color: colors.cardText },
+    rowRight: { flexDirection: 'row', alignItems: 'center', gap: 4 },
+    rowValue: { fontSize: fontSize.md, color: colors.cardTextMuted },
 
-  // Modals
-  overlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.4)', justifyContent: 'center', alignItems: 'center' },
-  dialog: { backgroundColor: colors.white, borderRadius: 5, width: 270, paddingTop: spacing.xl, overflow: 'hidden' },
-  dialogTitle: { fontSize: fontSize.lg, fontWeight: '600', color: colors.text, textAlign: 'center', paddingHorizontal: spacing.lg },
-  dialogMessage: { fontSize: fontSize.sm, color: colors.textSecondary, textAlign: 'center', marginTop: spacing.sm, marginBottom: spacing.xl, paddingHorizontal: spacing.lg },
-  dialogButtons: { flexDirection: 'row', borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: colors.gray[200] },
-  dialogBtn: { flex: 1, paddingVertical: 12, alignItems: 'center' },
-  dialogBtnText: { fontSize: fontSize.md, color: '#007aff', fontWeight: '400' },
-  dialogBtnDanger: { borderLeftWidth: StyleSheet.hairlineWidth, borderLeftColor: colors.gray[200] },
-  dialogBtnDangerText: { color: '#ff3b30', fontWeight: '600' },
+    // Modals
+    overlay: {
+      flex: 1,
+      backgroundColor: 'rgba(0,0,0,0.4)',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    dialog: {
+      backgroundColor: colors.surface,
+      borderRadius: 5,
+      width: 270,
+      paddingTop: spacing.xl,
+      overflow: 'hidden',
+    },
+    dialogTitle: {
+      fontSize: fontSize.lg,
+      fontWeight: '600',
+      color: colors.text,
+      textAlign: 'center',
+      paddingHorizontal: spacing.lg,
+    },
+    dialogMessage: {
+      fontSize: fontSize.sm,
+      color: colors.textSecondary,
+      textAlign: 'center',
+      marginTop: spacing.sm,
+      marginBottom: spacing.xl,
+      paddingHorizontal: spacing.lg,
+    },
+    dialogButtons: {
+      flexDirection: 'row',
+      borderTopWidth: StyleSheet.hairlineWidth,
+      borderTopColor: colors.border,
+    },
+    dialogBtn: { flex: 1, paddingVertical: 12, alignItems: 'center' },
+    dialogBtnText: { fontSize: fontSize.md, color: '#007aff', fontWeight: '400' },
+    dialogBtnDanger: {
+      borderLeftWidth: StyleSheet.hairlineWidth,
+      borderLeftColor: colors.border,
+    },
+    dialogBtnDangerText: { color: '#ff3b30', fontWeight: '600' },
 
-  // Language modal
-  langDialog: { backgroundColor: colors.white, borderRadius: 5, width: 300, paddingTop: spacing.xl, paddingBottom: spacing.lg, paddingHorizontal: spacing.lg, overflow: 'hidden' },
-  langDialogTitle: { fontSize: fontSize.lg, fontWeight: '600', color: colors.text, textAlign: 'center' },
-  langDialogSub: { fontSize: fontSize.sm, color: colors.textSecondary, textAlign: 'center', marginTop: spacing.xs, marginBottom: spacing.lg },
-  langFlagImg: { width: 24, height: 16, borderRadius: 2, marginRight: 6 },
-  langFlagModalImg: { width: 28, height: 19, borderRadius: 2, marginRight: 12 },
-  langRow: { flexDirection: 'row', alignItems: 'center', paddingVertical: 14 },
-  langRowBorder: { borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: colors.gray[200] },
-  langLabel: { flex: 1, fontSize: fontSize.md, color: colors.text },
-  langLabelActive: { fontWeight: '600', color: '#007aff' },
-});
+    // Language modal
+    langDialog: {
+      backgroundColor: colors.surface,
+      borderRadius: 5,
+      width: 300,
+      paddingTop: spacing.xl,
+      paddingBottom: spacing.lg,
+      paddingHorizontal: spacing.lg,
+      overflow: 'hidden',
+    },
+    langDialogTitle: {
+      fontSize: fontSize.lg,
+      fontWeight: '600',
+      color: colors.text,
+      textAlign: 'center',
+    },
+    langDialogSub: {
+      fontSize: fontSize.sm,
+      color: colors.textSecondary,
+      textAlign: 'center',
+      marginTop: spacing.xs,
+      marginBottom: spacing.lg,
+    },
+    langFlagImg: { width: 24, height: 16, borderRadius: 2, marginRight: 6 },
+    themeIconWrap: { width: 28, alignItems: 'center', marginRight: 12 },
+    langFlagModalImg: { width: 28, height: 19, borderRadius: 2, marginRight: 12 },
+    langRow: { flexDirection: 'row', alignItems: 'center', paddingVertical: 14 },
+    langRowBorder: {
+      borderBottomWidth: StyleSheet.hairlineWidth,
+      borderBottomColor: colors.border,
+    },
+    langLabel: { flex: 1, fontSize: fontSize.md, color: colors.text },
+    langLabelActive: { fontWeight: '600', color: '#007aff' },
+  });
+}

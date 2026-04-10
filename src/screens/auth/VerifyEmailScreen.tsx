@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { View, Text, TextInput, StyleSheet, Alert, TouchableOpacity } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { Button } from '../../components/ui';
+import { Button, GradientBackground } from '../../components/ui';
 import { verifyEmail, resendCode } from '../../api/auth';
 import { colors, fontSize, spacing, borderRadius } from '../../lib/theme';
 
@@ -47,7 +47,8 @@ export function VerifyEmailScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <GradientBackground>
+      <View style={styles.container}>
       <Text style={styles.title}>{t('verify.title')}</Text>
       <Text style={styles.subtitle}>{t('verify.subtitle')}</Text>
 
@@ -74,12 +75,13 @@ export function VerifyEmailScreen() {
           <Text style={styles.resendLink}>{t('verify.clickResend')}</Text>
         </TouchableOpacity>
       </View>
-    </View>
+      </View>
+    </GradientBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: 'center', padding: spacing.xxl, backgroundColor: colors.white },
+  container: { flex: 1, justifyContent: 'center', padding: spacing.xxl, backgroundColor: 'transparent' },
   title: { fontSize: fontSize.xxl, fontWeight: '700', color: colors.text, textAlign: 'center' },
   subtitle: { fontSize: fontSize.sm, color: colors.textSecondary, textAlign: 'center', marginTop: spacing.sm, marginBottom: spacing.xxxl },
   codeContainer: { flexDirection: 'row', justifyContent: 'center', gap: 12, marginBottom: spacing.xxl },

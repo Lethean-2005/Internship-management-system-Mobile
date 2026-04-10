@@ -4,3 +4,4 @@ export { Card } from './Card';
 export { Badge } from './Badge';
 export { LoadingSpinner } from './LoadingSpinner';
 export { EmptyState } from './EmptyState';
+export { GradientSafeArea, GradientBackground } from './GradientSafeArea';

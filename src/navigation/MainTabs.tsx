@@ -19,6 +19,9 @@ import { JobPostingsScreen } from '../screens/main/JobPostingsScreen';
 import { LeavesScreen } from '../screens/main/LeavesScreen';
 import { MentoringSessionsScreen } from '../screens/main/MentoringSessionsScreen';
 import { ProfileScreen } from '../screens/main/ProfileScreen';
+import { EditProfileScreen } from '../screens/main/EditProfileScreen';
+import { PersonalInformationScreen } from '../screens/main/PersonalInformationScreen';
+import { SecurityScreen } from '../screens/main/SecurityScreen';
 import { MyInternsScreen } from '../screens/main/MyInternsScreen';
 import { CalendarScreen } from '../screens/main/CalendarScreen';
 import { UsersScreen } from '../screens/main/UsersScreen';
@@ -64,18 +67,26 @@ function MoreNavigator() {
       <MoreStack.Screen name="MentoringSessions" component={MentoringSessionsScreen} options={{ title: t('mentoring.title') }} />
       <MoreStack.Screen name="MyInterns" component={MyInternsScreen} options={{ title: 'My Interns' }} />
       <MoreStack.Screen name="Calendar" component={CalendarScreen} options={{ title: 'Calendar' }} />
-      <MoreStack.Screen name="Users" component={UsersScreen} options={{ title: 'Users' }} />
-      <MoreStack.Screen name="UserForm" component={UserFormScreen} options={({ route }) => ({ title: route.params?.id ? 'Edit User' : 'New User' })} />
-      <MoreStack.Screen name="Roles" component={RolesScreen} options={{ title: 'Roles' }} />
-      <MoreStack.Screen name="Configuration" component={ConfigurationScreen} options={{ title: 'Configuration' }} />
     </MoreStack.Navigator>
   );
 }
 
 function ProfileNavigator() {
+  const { t } = useTranslation();
   return (
     <ProfileStack.Navigator>
       <ProfileStack.Screen name="Profile" component={ProfileScreen} options={{ headerShown: false }} />
+      <ProfileStack.Screen name="EditProfile" component={EditProfileScreen} options={{ title: t('profile.accountSettings') }} />
+      <ProfileStack.Screen name="PersonalInformation" component={PersonalInformationScreen} options={{ title: t('auth.personalInfo') }} />
+      <ProfileStack.Screen name="Security" component={SecurityScreen} options={{ title: t('profile.security') }} />
+      <ProfileStack.Screen name="Users" component={UsersScreen} options={{ title: t('sidebar.users') }} />
+      <ProfileStack.Screen
+        name="UserForm"
+        component={UserFormScreen}
+        options={({ route }) => ({ title: route.params?.id ? t('users.editUser') : t('users.createUser') })}
+      />
+      <ProfileStack.Screen name="Roles" component={RolesScreen} options={{ title: t('sidebar.roles') }} />
+      <ProfileStack.Screen name="Configuration" component={ConfigurationScreen} options={{ title: t('config.title') }} />
     </ProfileStack.Navigator>
   );
 }

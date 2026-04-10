@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, KeyboardAv
 import { useTranslation } from 'react-i18next';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { Button, Input } from '../../components/ui';
+import { Button, Input, GradientBackground } from '../../components/ui';
 import { register } from '../../api/auth';
 import { useAuthStore } from '../../stores/authStore';
 import { colors, fontSize, spacing, borderRadius } from '../../lib/theme';
@@ -64,7 +64,8 @@ export function RegisterScreen() {
   };
 
   return (
-    <KeyboardAvoidingView style={styles.flex} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+    <GradientBackground>
+      <KeyboardAvoidingView style={styles.flex} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="always">
         {step === 0 && (
           <View>
@@ -127,12 +128,13 @@ export function RegisterScreen() {
           </TouchableOpacity>
         </View>
       </ScrollView>
-    </KeyboardAvoidingView>
+      </KeyboardAvoidingView>
+    </GradientBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  flex: { flex: 1, backgroundColor: colors.white },
+  flex: { flex: 1, backgroundColor: 'transparent' },
   container: { flexGrow: 1, padding: spacing.xxl, justifyContent: 'center' },
   title: { fontSize: fontSize.xxl, fontWeight: '700', color: colors.text, marginBottom: spacing.xs },
   subtitle: { fontSize: fontSize.sm, color: colors.textSecondary, marginBottom: spacing.xxl },

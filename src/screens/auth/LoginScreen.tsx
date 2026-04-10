@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, KeyboardAvoidingView, Platform, ScrollView, Tou
 import { useTranslation } from 'react-i18next';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { Button, Input } from '../../components/ui';
+import { Button, Input, GradientBackground } from '../../components/ui';
 import { login } from '../../api/auth';
 import { useAuthStore } from '../../stores/authStore';
 import { colors, fontSize, spacing, borderRadius } from '../../lib/theme';
@@ -51,7 +51,8 @@ export function LoginScreen() {
   };
 
   return (
-    <KeyboardAvoidingView style={styles.flex} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+    <GradientBackground>
+      <KeyboardAvoidingView style={styles.flex} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="always">
         <View style={styles.header}>
           <Text style={styles.title}>{t('auth.signIn')}</Text>
@@ -86,12 +87,13 @@ export function LoginScreen() {
           </TouchableOpacity>
         </View>
       </ScrollView>
-    </KeyboardAvoidingView>
+      </KeyboardAvoidingView>
+    </GradientBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  flex: { flex: 1, backgroundColor: colors.background },
+  flex: { flex: 1, backgroundColor: 'transparent' },
   container: {
     flexGrow: 1,
     justifyContent: 'center',

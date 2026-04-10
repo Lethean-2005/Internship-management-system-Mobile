@@ -92,7 +92,20 @@
     "noDeadlines": "No deadlines set.",
     "viewAll": "View All",
     "myTutor": "My Tutor",
-    "deadlines": "Upcoming Deadlines"
+    "deadlines": "Upcoming Deadlines",
+    "hello": "Hello, {{name}}",
+    "whatToDo": "What you want do today?",
+    "searchActivities": "Search for activities",
+    "chipWorklogs": "Worklogs",
+    "chipLeaves": "Leaves",
+    "chipReports": "Reports",
+    "chipInterns": "Interns",
+    "activeInterns": "Active Interns",
+    "internshipsCount": "{{count}} internships",
+    "submitWeeklyReport": "Submit your weekly report",
+    "pending": "pending",
+    "viewAllModules": "View all modules",
+    "review": "Review"
   },
   "users": {
     "title": "Users",
@@ -516,7 +529,12 @@
     "language": "Language",
     "selectLanguage": "Select your preferred language",
     "languageChanged": "Language changed successfully!",
-    "languageDescription": "Choose the language you'd like to use across the platform."
+    "languageDescription": "Choose the language you'd like to use across the platform.",
+    "theme": "Theme",
+    "themeLight": "Light",
+    "themeDark": "Dark",
+    "themeSystem": "System default",
+    "selectTheme": "Choose the appearance of the app"
   },
   "verify": {
     "title": "Enter verification code",

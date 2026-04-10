@@ -92,7 +92,20 @@
     "noDeadlines": "Aucune échéance définie.",
     "viewAll": "Voir tout",
     "myTutor": "Mon tuteur",
-    "deadlines": "Échéances à venir"
+    "deadlines": "Échéances à venir",
+    "hello": "Bonjour, {{name}}",
+    "whatToDo": "Que voulez-vous faire aujourd'hui ?",
+    "searchActivities": "Rechercher des activités",
+    "chipWorklogs": "Journaux",
+    "chipLeaves": "Congés",
+    "chipReports": "Rapports",
+    "chipInterns": "Stagiaires",
+    "activeInterns": "Stagiaires actifs",
+    "internshipsCount": "{{count}} stages",
+    "submitWeeklyReport": "Soumettez votre rapport hebdomadaire",
+    "pending": "en attente",
+    "viewAllModules": "Voir tous les modules",
+    "review": "Réviser"
   },
   "users": {
     "title": "Utilisateurs",
@@ -671,7 +684,12 @@
     "language": "Langue",
     "selectLanguage": "Sélectionnez votre langue préférée",
     "languageChanged": "Langue modifiée avec succès !",
-    "languageDescription": "Choisissez la langue que vous souhaitez utiliser sur la plateforme."
+    "languageDescription": "Choisissez la langue que vous souhaitez utiliser sur la plateforme.",
+    "theme": "Thème",
+    "themeLight": "Clair",
+    "themeDark": "Sombre",
+    "themeSystem": "Système par défaut",
+    "selectTheme": "Choisissez l'apparence de l'application"
   },
   "congrats": {
     "title": "Félicitations !",

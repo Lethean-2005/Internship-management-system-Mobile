@@ -92,7 +92,20 @@
     "noDeadlines": "មិនទាន់មានថ្ងៃកំណត់ទេ។",
     "viewAll": "មើលទាំងអស់",
     "myTutor": "គ្រូប្រឹក្សារបស់ខ្ញុំ",
-    "deadlines": "ថ្ងៃកំណត់នាពេលខាងមុខ"
+    "deadlines": "ថ្ងៃកំណត់នាពេលខាងមុខ",
+    "hello": "សួស្តី {{name}}",
+    "whatToDo": "តើអ្នកចង់ធ្វើអ្វីថ្ងៃនេះ?",
+    "searchActivities": "ស្វែងរកសកម្មភាព",
+    "chipWorklogs": "កំណត់ត្រា",
+    "chipLeaves": "ច្បាប់ឈប់",
+    "chipReports": "របាយការណ៍",
+    "chipInterns": "សិស្សកម្មសិក្សា",
+    "activeInterns": "សិស្សកំពុងសិក្សា",
+    "internshipsCount": "កម្មសិក្សា {{count}}",
+    "submitWeeklyReport": "ដាក់ស្នើរបាយការណ៍ប្រចាំសប្តាហ៍",
+    "pending": "រង់ចាំ",
+    "viewAllModules": "មើលម៉ូឌុលទាំងអស់",
+    "review": "ពិនិត្យ"
   },
   "users": {
     "title": "អ្នកប្រើប្រាស់",
@@ -671,7 +684,12 @@
     "language": "ភាសា",
     "selectLanguage": "ជ្រើសរើសភាសាដែលអ្នកចូលចិត្ត",
     "languageChanged": "ភាសាត្រូវបានផ្លាស់ប្តូរដោយជោគជ័យ!",
-    "languageDescription": "ជ្រើសរើសភាសាដែលអ្នកចង់ប្រើនៅលើវេទិកា។"
+    "languageDescription": "ជ្រើសរើសភាសាដែលអ្នកចង់ប្រើនៅលើវេទិកា។",
+    "theme": "រូបរាង",
+    "themeLight": "ភ្លឺ",
+    "themeDark": "ងងឹត",
+    "themeSystem": "លំនាំដើមប្រព័ន្ធ",
+    "selectTheme": "ជ្រើសរើសរូបរាងនៃកម្មវិធី"
   },
   "congrats": {
     "title": "អបិនន្ទន!",

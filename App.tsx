@@ -10,6 +10,7 @@ import { KantumruyPro_700Bold } from '@expo-google-fonts/kantumruy-pro/700Bold';
 import { RootNavigator } from './src/navigation/RootNavigator';
 import { ActivityIndicator, View, Platform } from 'react-native';
 import i18n from './src/i18n';
+import { useThemeStore } from './src/stores/themeStore';
 
 // Inject CSS for Khmer font override on web
 let styleEl: HTMLStyleElement | null = null;
@@ -53,6 +54,11 @@ export default function App() {
   });
 
   const [langKey, setLangKey] = useState(i18n.language);
+  const loadThemeMode = useThemeStore((s) => s.loadMode);
+
+  useEffect(() => {
+    loadThemeMode();
+  }, []);
 
   useEffect(() => {
     const handler = (lng: string) => {

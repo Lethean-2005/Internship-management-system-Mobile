@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, FlatList, TouchableOpacity, RefreshControl } fr
 import { useTranslation } from 'react-i18next';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { Card, Badge, LoadingSpinner, EmptyState, Button } from '../../components/ui';
+import { Card, Badge, LoadingSpinner, EmptyState, Button, GradientBackground } from '../../components/ui';
 import { getWorklogs } from '../../api/worklogs';
 import { colors, fontSize, spacing } from '../../lib/theme';
 import type { WeeklyWorklog } from '../../types/ims';
@@ -32,7 +32,7 @@ export function WorklogsScreen() {
   if (loading) return <LoadingSpinner />;
 
   return (
-    <View style={styles.container}>
+    <GradientBackground>
       <FlatList
         data={worklogs}
         keyExtractor={(item) => item.id.toString()}
@@ -55,12 +55,12 @@ export function WorklogsScreen() {
       <View style={styles.fab}>
         <Button title="+" onPress={() => navigation.navigate('WorklogForm', {})} style={styles.fabBtn} textStyle={{ fontSize: 24 }} />
       </View>
-    </View>
+    </GradientBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background },
+  container: { flex: 1, backgroundColor: 'transparent' },
   list: { padding: spacing.lg },
   card: { marginBottom: spacing.md },
   cardHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },

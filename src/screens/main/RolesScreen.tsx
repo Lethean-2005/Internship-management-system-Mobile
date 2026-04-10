@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, RefreshControl, Alert, TextInput } from 'react-native';
 import { IconPencil, IconTrash, IconPlus } from '@tabler/icons-react-native';
-import { Card, LoadingSpinner, EmptyState, Button, Input } from '../../components/ui';
+import { Card, LoadingSpinner, EmptyState, Button, Input, GradientBackground } from '../../components/ui';
 import { getRoles, createRole, updateRole, deleteRole } from '../../api/roles';
 import { colors, fontSize, spacing, borderRadius } from '../../lib/theme';
 import type { Role } from '../../types/ims';
@@ -67,7 +67,8 @@ export function RolesScreen() {
   if (loading) return <LoadingSpinner />;
 
   return (
-    <View style={styles.container}>
+    <GradientBackground>
+      <View style={styles.container}>
       {showForm && (
         <View style={styles.formContainer}>
           <Text style={styles.formTitle}>{editId ? 'Edit Role' : 'New Role'}</Text>
@@ -114,12 +115,13 @@ export function RolesScreen() {
           <IconPlus size={28} color={colors.white} strokeWidth={2} />
         </TouchableOpacity>
       )}
-    </View>
+      </View>
+    </GradientBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background },
+  container: { flex: 1, backgroundColor: 'transparent' },
   formContainer: { backgroundColor: colors.white, padding: spacing.lg, borderBottomWidth: 1, borderBottomColor: colors.border },
   formTitle: { fontSize: fontSize.lg, fontWeight: '700', color: colors.text, marginBottom: spacing.sm },
   formActions: { flexDirection: 'row', marginTop: spacing.sm },

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, FlatList, RefreshControl, TouchableOpacity, Modal, Pressable, TextInput, Alert, ScrollView, KeyboardAvoidingView, Platform, Linking } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { Card, Badge, LoadingSpinner, EmptyState, Button, Input } from '../../components/ui';
+import { Card, Badge, LoadingSpinner, EmptyState, Button, Input, GradientBackground } from '../../components/ui';
 import { getInterviews, createInterview, updateInterview, deleteInterview, updateResult } from '../../api/interviews';
 import { getUsers } from '../../api/users';
 import { useAuthStore } from '../../stores/authStore';
@@ -123,7 +123,8 @@ export function InterviewsScreen() {
   ) : [];
 
   return (
-    <View style={styles.container}>
+    <GradientBackground>
+      <View style={styles.container}>
       <FlatList
         data={interviews}
         keyExtractor={(item) => item.id.toString()}
@@ -298,12 +299,13 @@ export function InterviewsScreen() {
           </Pressable>
         </Pressable>
       </Modal>
-    </View>
+      </View>
+    </GradientBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background },
+  container: { flex: 1, backgroundColor: 'transparent' },
   list: { padding: spacing.lg },
   card: { marginBottom: spacing.md },
   row: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
@@ -342,7 +344,7 @@ const styles = StyleSheet.create({
   },
   formHeaderTitle: { fontSize: fontSize.md, fontWeight: '600', color: colors.text },
   formCancel: { fontSize: fontSize.md, color: '#007aff' },
-  formBody: { flex: 1, backgroundColor: colors.background },
+  formBody: { flex: 1, backgroundColor: 'transparent' },
   formContent: { padding: spacing.xl },
   formDialog: { backgroundColor: colors.white, borderRadius: 5, width: '90%', maxHeight: '85%', padding: spacing.xl },
   formTitle: { fontSize: fontSize.lg, fontWeight: '600', color: colors.text, marginBottom: spacing.sm },

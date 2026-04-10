@@ -38,15 +38,18 @@ export type MoreStackParamList = {
   Contacts: undefined;
   ContactForm: undefined;
   MyInterns: undefined;
-  Users: undefined;
-  UserForm: { id?: number };
-  Roles: undefined;
-  Configuration: undefined;
   Calendar: undefined;
 };
 
 export type ProfileStackParamList = {
   Profile: undefined;
+  EditProfile: undefined;
+  PersonalInformation: undefined;
+  Security: undefined;
+  Configuration: undefined;
+  Users: undefined;
+  UserForm: { id?: number };
+  Roles: undefined;
 };
 
 export type RootStackParamList = {

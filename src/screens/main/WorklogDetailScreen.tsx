@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useRoute } from '@react-navigation/native';
-import { Card, Badge, LoadingSpinner } from '../../components/ui';
+import { Card, Badge, LoadingSpinner, GradientBackground } from '../../components/ui';
 import { getWorklog } from '../../api/worklogs';
 import { colors, fontSize, spacing } from '../../lib/theme';
 import type { WeeklyWorklog } from '../../types/ims';
@@ -20,7 +20,8 @@ export function WorklogDetailScreen() {
   if (loading || !worklog) return <LoadingSpinner />;
 
   return (
-    <ScrollView style={styles.container}>
+    <GradientBackground>
+      <ScrollView style={styles.container}>
       <Card style={styles.card}>
         <View style={styles.row}>
           <Text style={styles.title}>{t('worklogs.week')} {worklog.week_number}</Text>
@@ -44,12 +45,13 @@ export function WorklogDetailScreen() {
           <Text style={styles.feedbackText}>{worklog.feedback}</Text>
         </Card>
       )}
-    </ScrollView>
+      </ScrollView>
+    </GradientBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background, padding: spacing.lg },
+  container: { flex: 1, backgroundColor: 'transparent', padding: spacing.lg },
   card: { marginBottom: spacing.md },
   row: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   title: { fontSize: fontSize.xl, fontWeight: '700', color: colors.text },

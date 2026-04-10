@@ -1,15 +1,16 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { GradientSafeArea } from '../../components/ui';
 import {
   IconFileText, IconPresentation, IconMessageCircle, IconBriefcase, IconPlane,
-  IconUsers, IconCalendar, IconSchool, IconUser, IconShield, IconSettings, IconLayoutGrid,
+  IconUsers, IconCalendar, IconSchool, IconLayoutGrid,
 } from '@tabler/icons-react-native';
 import { useAuthStore } from '../../stores/authStore';
-import { colors, fontSize, spacing, borderRadius } from '../../lib/theme';
+import { fontSize, spacing, borderRadius } from '../../lib/theme';
+import { useAppTheme } from '../../lib/useAppTheme';
 import type { MoreStackParamList } from '../../navigation/types';
 
 type Nav = NativeStackNavigationProp<MoreStackParamList>;
@@ -30,9 +31,6 @@ const menuItems: MenuItem[] = [
   { title: 'mentoring.title', screen: 'MentoringSessions', Icon: IconUsers },
   { title: 'sidebar.calendar', screen: 'Calendar', Icon: IconCalendar },
   { title: 'sidebar.myInterns', screen: 'MyInterns', Icon: IconSchool, roles: ['tutor'] },
-  { title: 'sidebar.users', screen: 'Users', Icon: IconUser, roles: ['admin'] },
-  { title: 'sidebar.roles', screen: 'Roles', Icon: IconShield, roles: ['admin'] },
-  { title: 'sidebar.configuration', screen: 'Configuration', Icon: IconSettings, roles: ['admin'] },
 ];
 
 export function MoreMenuScreen() {
@@ -40,14 +38,16 @@ export function MoreMenuScreen() {
   const navigation = useNavigation<Nav>();
   const user = useAuthStore((s) => s.user);
   const userRole = user?.role?.slug;
+  const { colors, effective } = useAppTheme();
+  const styles = useMemo(() => createStyles(colors, effective), [colors, effective]);
 
   const filtered = menuItems.filter((item) => !item.roles || (userRole && item.roles.includes(userRole)));
 
   return (
-    <SafeAreaView style={styles.safe} edges={['top']}>
+    <GradientSafeArea edges={['top']}>
       <ScrollView style={styles.container} contentContainerStyle={styles.content}>
         <View style={styles.header}>
-          <IconLayoutGrid size={24} color={colors.text} strokeWidth={1.5} />
+          <IconLayoutGrid size={24} color={colors.textOnBackground} strokeWidth={1.5} />
         </View>
         <Text style={styles.title}>{t('sidebar.more')}</Text>
         <Text style={styles.subtitle}>{t('sidebar.browseFeatures')}</Text>
@@ -61,34 +61,36 @@ export function MoreMenuScreen() {
               onPress={() => navigation.navigate(item.screen as any)}
             >
               <View style={styles.iconBox}>
-                <item.Icon size={22} color="#f97316" strokeWidth={1.5} />
+                <item.Icon size={22} color={colors.cardText} strokeWidth={1.5} />
               </View>
               <Text style={styles.cardLabel} numberOfLines={2}>{t(item.title)}</Text>
             </TouchableOpacity>
           ))}
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </GradientSafeArea>
   );
 }
 
-const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: colors.background },
-  container: { flex: 1 },
-  content: { paddingHorizontal: spacing.xxl, paddingBottom: spacing.xxxl },
-  header: { paddingTop: spacing.lg, marginBottom: spacing.xl },
-  title: { fontSize: fontSize.xxxl, fontWeight: '700', color: colors.text, letterSpacing: -0.5 },
-  subtitle: { fontSize: fontSize.sm, color: colors.textSecondary, marginTop: spacing.xs, marginBottom: spacing.xxl },
-  grid: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.md },
-  card: {
-    width: '47%',
-    backgroundColor: colors.white,
-    borderRadius: borderRadius.xl,
-    padding: spacing.xl,
-    minHeight: 120,
-  },
-  iconBox: {
-    marginBottom: spacing.md,
-  },
-  cardLabel: { fontSize: fontSize.sm, fontWeight: '500', color: colors.text },
-});
+function createStyles(colors: any, effective: string) {
+  const subtitleColor = effective === 'dark' ? 'rgba(255,255,255,0.7)' : colors.textSecondary;
+  return StyleSheet.create({
+    container: { flex: 1, backgroundColor: 'transparent' },
+    content: { paddingHorizontal: spacing.xxl, paddingBottom: spacing.xxxl },
+    header: { paddingTop: spacing.lg, marginBottom: spacing.xl },
+    title: { fontSize: fontSize.xxxl, fontWeight: '700', color: colors.textOnBackground, letterSpacing: -0.5 },
+    subtitle: { fontSize: fontSize.sm, color: subtitleColor, marginTop: spacing.xs, marginBottom: spacing.xxl },
+    grid: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.md },
+    card: {
+      width: '47%',
+      backgroundColor: colors.card,
+      borderRadius: borderRadius.xl,
+      padding: spacing.xl,
+      minHeight: 120,
+    },
+    iconBox: {
+      marginBottom: spacing.md,
+    },
+    cardLabel: { fontSize: fontSize.sm, fontWeight: '500', color: colors.cardText },
+  });
+}

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, StyleSheet, ScrollView, Alert } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useNavigation } from '@react-navigation/native';
-import { Button, Input } from '../../components/ui';
+import { Button, Input, GradientBackground } from '../../components/ui';
 import { createWorklog } from '../../api/worklogs';
 import { colors, spacing } from '../../lib/theme';
 
@@ -44,7 +44,8 @@ export function WorklogFormScreen() {
   };
 
   return (
-    <ScrollView style={styles.container} keyboardShouldPersistTaps="always">
+    <GradientBackground>
+      <ScrollView style={styles.container} keyboardShouldPersistTaps="always">
       <Input label={`${t('worklogs.weekNum')} *`} value={weekNumber} onChangeText={setWeekNumber} keyboardType="number-pad" />
       <Input label={`${t('worklogs.startDate')} *`} value={startDate} onChangeText={setStartDate} placeholder="YYYY-MM-DD" />
       <Input label={`${t('worklogs.endDate')} *`} value={endDate} onChangeText={setEndDate} placeholder="YYYY-MM-DD" />
@@ -54,10 +55,11 @@ export function WorklogFormScreen() {
       <Input label="Reflections" value={reflections} onChangeText={setReflections} multiline numberOfLines={3} style={{ height: 80, textAlignVertical: 'top' }} />
       <Button title={t('worklogs.createWorklog')} onPress={handleSubmit} loading={loading} />
       <View style={{ height: 40 }} />
-    </ScrollView>
+      </ScrollView>
+    </GradientBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.white, padding: spacing.xxl },
+  container: { flex: 1, backgroundColor: 'transparent', padding: spacing.xxl },
 });

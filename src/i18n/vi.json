@@ -92,7 +92,20 @@
     "noDeadlines": "Chưa có hạn chót nào.",
     "viewAll": "Xem tất cả",
     "myTutor": "Người hướng dẫn",
-    "deadlines": "Hạn chót sắp tới"
+    "deadlines": "Hạn chót sắp tới",
+    "hello": "Xin chào, {{name}}",
+    "whatToDo": "Hôm nay bạn muốn làm gì?",
+    "searchActivities": "Tìm kiếm hoạt động",
+    "chipWorklogs": "Nhật ký",
+    "chipLeaves": "Nghỉ phép",
+    "chipReports": "Báo cáo",
+    "chipInterns": "Thực tập sinh",
+    "activeInterns": "Thực tập đang hoạt động",
+    "internshipsCount": "{{count}} kỳ thực tập",
+    "submitWeeklyReport": "Nộp báo cáo tuần của bạn",
+    "pending": "chờ xử lý",
+    "viewAllModules": "Xem tất cả mô-đun",
+    "review": "Xem xét"
   },
   "users": {
     "title": "Người dùng",
@@ -671,7 +684,12 @@
     "language": "Ngôn ngữ",
     "selectLanguage": "Chọn ngôn ngữ bạn muốn",
     "languageChanged": "Đổi ngôn ngữ thành công!",
-    "languageDescription": "Chọn ngôn ngữ bạn muốn sử dụng trên nền tảng."
+    "languageDescription": "Chọn ngôn ngữ bạn muốn sử dụng trên nền tảng.",
+    "theme": "Giao diện",
+    "themeLight": "Sáng",
+    "themeDark": "Tối",
+    "themeSystem": "Mặc định hệ thống",
+    "selectTheme": "Chọn giao diện của ứng dụng"
   },
   "congrats": {
     "title": "Chúc mừng!",

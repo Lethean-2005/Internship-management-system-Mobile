@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { IconFileText, IconFolder, IconUsers, IconCalendar, IconShield, IconBriefcase, IconPlane, IconMessageCircle, IconSearch } from '@tabler/icons-react-native';
-import { colors, fontSize, spacing } from '../../lib/theme';
+import { fontSize, spacing } from '../../lib/theme';
+import { useAppTheme } from '../../lib/useAppTheme';
 
 const iconMap = {
   'document-text-outline': IconFileText,
@@ -22,6 +23,8 @@ interface EmptyStateProps {
 }
 
 export function EmptyState({ icon = 'document-text-outline', title, subtitle }: EmptyStateProps) {
+  const { colors } = useAppTheme();
+  const styles = useMemo(() => createStyles(colors), [colors]);
   const TablerIcon = iconMap[icon as keyof typeof iconMap] || IconFileText;
   return (
     <View style={styles.container}>
@@ -32,8 +35,10 @@ export function EmptyState({ icon = 'document-text-outline', title, subtitle }: 
   );
 }
 
-const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: spacing.xxxl },
-  title: { fontSize: fontSize.lg, fontWeight: '600', color: colors.gray[500], marginTop: spacing.lg, textAlign: 'center' },
-  subtitle: { fontSize: fontSize.sm, color: colors.gray[400], marginTop: spacing.sm, textAlign: 'center' },
-});
+function createStyles(colors: any) {
+  return StyleSheet.create({
+    container: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: spacing.xxxl },
+    title: { fontSize: fontSize.lg, fontWeight: '600', color: colors.textSecondary, marginTop: spacing.lg, textAlign: 'center' },
+    subtitle: { fontSize: fontSize.sm, color: colors.textMuted, marginTop: spacing.sm, textAlign: 'center' },
+  });
+}

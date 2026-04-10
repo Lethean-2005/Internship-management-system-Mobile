@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, Alert, Switch } from 'react-native';
-import { Card, Button, Input, LoadingSpinner } from '../../components/ui';
+import { Card, Button, Input, LoadingSpinner, GradientBackground } from '../../components/ui';
 import { getSettings, updateSettings, type Settings } from '../../api/settings';
 import { colors, fontSize, spacing, borderRadius } from '../../lib/theme';
 
@@ -54,7 +54,8 @@ export function ConfigurationScreen() {
   if (loading || !settings) return <LoadingSpinner />;
 
   return (
-    <ScrollView style={styles.container} keyboardShouldPersistTaps="always">
+    <GradientBackground>
+      <ScrollView style={styles.container} keyboardShouldPersistTaps="always">
       <SectionHeader title="General" color={colors.info} />
       <Card style={styles.card}>
         <Input label="App Name" value={settings.app_name} onChangeText={(v) => update('app_name', v)} />
@@ -103,12 +104,13 @@ export function ConfigurationScreen() {
 
       <Button title="Save Settings" onPress={handleSave} loading={saving} />
       <View style={{ height: 40 }} />
-    </ScrollView>
+      </ScrollView>
+    </GradientBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background, padding: spacing.lg },
+  container: { flex: 1, backgroundColor: 'transparent', padding: spacing.lg },
   sectionHeader: { borderLeftWidth: 4, paddingLeft: spacing.md, marginTop: spacing.lg, marginBottom: spacing.sm },
   sectionTitle: { fontSize: fontSize.lg, fontWeight: '700', color: colors.text },
   card: { marginBottom: spacing.sm },

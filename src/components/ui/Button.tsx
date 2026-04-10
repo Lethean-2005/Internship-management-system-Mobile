@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { TouchableOpacity, Text, StyleSheet, ActivityIndicator, ViewStyle, TextStyle } from 'react-native';
-import { colors, borderRadius, fontSize, spacing } from '../../lib/theme';
+import { borderRadius, fontSize, spacing } from '../../lib/theme';
+import { useAppTheme } from '../../lib/useAppTheme';
 
 interface ButtonProps {
   title: string;
@@ -14,15 +15,18 @@ interface ButtonProps {
 }
 
 export function Button({ title, onPress, variant = 'primary', size = 'md', loading, disabled, style, textStyle }: ButtonProps) {
+  const { colors } = useAppTheme();
+  const styles = useMemo(() => createStyles(), []);
+
   const bgColor = {
-    primary: colors.text,
+    primary: colors.buttonPrimary,
     secondary: colors.gray[100],
     danger: colors.danger,
     ghost: 'transparent',
   }[variant];
 
   const txtColor = {
-    primary: colors.white,
+    primary: colors.buttonPrimaryText,
     secondary: colors.text,
     danger: colors.white,
     ghost: colors.text,
@@ -53,17 +57,19 @@ export function Button({ title, onPress, variant = 'primary', size = 'md', loadi
   );
 }
 
-const styles = StyleSheet.create({
-  button: {
-    borderRadius: borderRadius.lg,
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'row',
-  },
-  text: {
-    fontWeight: '600',
-  },
-  disabled: {
-    opacity: 0.5,
-  },
-});
+function createStyles() {
+  return StyleSheet.create({
+    button: {
+      borderRadius: borderRadius.lg,
+      alignItems: 'center',
+      justifyContent: 'center',
+      flexDirection: 'row',
+    },
+    text: {
+      fontWeight: '600',
+    },
+    disabled: {
+      opacity: 0.5,
+    },
+  });
+}

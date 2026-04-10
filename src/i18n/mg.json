@@ -92,7 +92,20 @@
     "noDeadlines": "Tsy mbola misy fe-potoana.",
     "viewAll": "Jereo daholo",
     "myTutor": "Ny mpanoro hevitra ahy",
-    "deadlines": "Fe-potoana ho avy"
+    "deadlines": "Fe-potoana ho avy",
+    "hello": "Salama, {{name}}",
+    "whatToDo": "Inona no tianao hatao androany?",
+    "searchActivities": "Hitady hetsika",
+    "chipWorklogs": "Fisainana",
+    "chipLeaves": "Fialantsasatra",
+    "chipReports": "Tatitra",
+    "chipInterns": "Mpianatra",
+    "activeInterns": "Mpianatra miasa",
+    "internshipsCount": "{{count}} fampiofanana",
+    "submitWeeklyReport": "Atolory ny tatitrao isan-kerinandro",
+    "pending": "miandry",
+    "viewAllModules": "Jereo ny modules rehetra",
+    "review": "Hijery"
   },
   "users": {
     "title": "Mpampiasa",
@@ -671,7 +684,12 @@
     "language": "Fiteny",
     "selectLanguage": "Misafidiana ny fiteny tianao",
     "languageChanged": "Voaova soa aman-tsara ny fiteny!",
-    "languageDescription": "Misafidiana ny fiteny tianao hampiasaina amin'ny sehatra."
+    "languageDescription": "Misafidiana ny fiteny tianao hampiasaina amin'ny sehatra.",
+    "theme": "Endrika",
+    "themeLight": "Mazava",
+    "themeDark": "Maizina",
+    "themeSystem": "Ny an'ny rafitra",
+    "selectTheme": "Safidio ny endrika ny fampiharana"
   },
   "congrats": {
     "title": "Arahabaina!",

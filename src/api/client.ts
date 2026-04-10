@@ -2,11 +2,7 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Platform } from 'react-native';
 
-// Your PC's local IP - phone uses this, web uses localhost
-const LAN_IP = '10.11.5.67';
-const API_BASE_URL = Platform.OS === 'web'
-  ? 'http://localhost:8000/api'
-  : `http://${LAN_IP}:8000/api`;
+const API_BASE_URL = 'https://internship-management-system-fcm8.onrender.com/api';
 
 const client = axios.create({
   baseURL: API_BASE_URL,

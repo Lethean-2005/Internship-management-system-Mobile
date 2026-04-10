@@ -1,16 +1,10 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { EmptyState } from '../../components/ui';
-import { colors } from '../../lib/theme';
+import { EmptyState, GradientBackground } from '../../components/ui';
 
 export function CalendarScreen() {
   return (
-    <View style={styles.container}>
+    <GradientBackground>
       <EmptyState title="Calendar" subtitle="Your events, deadlines, and schedules." icon="calendar-outline" />
-    </View>
+    </GradientBackground>
   );
 }
-
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background },
-});
